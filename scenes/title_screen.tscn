@@ -1,0 +1,144 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/title_screen.gd" id="1_title"]
+[ext_resource type="Texture2D" path="res://assets/images/title_background.png" id="2_bg"]
+
+[node name="TitleScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_title")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(640, 360)
+texture = ExtResource("2_bg")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Tagline" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -400.0
+offset_top = 284.0
+offset_right = 400.0
+offset_bottom = 324.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.043, 0.063, 0.255, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 32
+text = "A FUGA  -  Você é o bilionário. Ele é imortal. E está chegando."
+horizontal_alignment = 1
+
+[node name="Menu" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -160.0
+offset_top = 338.0
+offset_right = 160.0
+offset_bottom = 524.0
+grow_horizontal = 2
+theme_override_constants/separation = 14
+
+[node name="PlayButton" type="Button" parent="Menu"]
+layout_mode = 2
+text = "Jogar"
+
+[node name="ControlsButton" type="Button" parent="Menu"]
+layout_mode = 2
+text = "Controles"
+
+[node name="QuitButton" type="Button" parent="Menu"]
+layout_mode = 2
+text = "Sair"
+
+[node name="PressHint" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -400.0
+offset_top = -36.0
+offset_right = 400.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.043, 0.063, 0.255, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 16
+text = "Mujo Estudio  -  Protótipo A Fuga v0.1  -  Setas/WASD + Enter para escolher"
+horizontal_alignment = 1
+
+[node name="ControlsPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -330.0
+offset_top = -250.0
+offset_right = 330.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="ControlsPanel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="ControlsPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.996, 0.867, 0.525, 1)
+theme_override_font_sizes/font_size = 48
+text = "Controles"
+horizontal_alignment = 1
+
+[node name="Text" type="Label" parent="ControlsPanel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "A / D  ou  Setas ........ correr
+ESPAÇO ..................... pular
+SHIFT ........................ dash  (desbloqueado na fase 2)
+ESPAÇO no ar .............. pulo duplo  (fase 3)
+segurar ESPAÇO caindo .. planar  (fase 4)
+ESC ........................... pausar
+R ............................... recomeçar a fase
+
+Você é imortal: espinhos, lasers, carros e trens
+só te empurram. Só o toque do CARAMUJO acaba
+com você. Ele rasteja por chão, paredes e tetos."
+autowrap_mode = 2
+
+[node name="CloseButton" type="Button" parent="ControlsPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Voltar"
+
+[node name="Fade" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.043, 0.063, 0.255, 1)
