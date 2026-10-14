@@ -273,15 +273,18 @@ func show_caught() -> void:
 func open_pause() -> void:
 	_pause.visible = true
 	get_tree().paused = true
+	GameState.set_music_duck(8.0, 0.2)
 	_pause_first.grab_focus()
 
 
 func close_pause() -> void:
 	_pause.visible = false
 	get_tree().paused = false
+	GameState.set_music_duck(0.0, 0.2)
 
 
 func show_final() -> void:
+	GameState.play_music("menu", 3.0)
 	var final := _full_rect(UiStyle.NAVY)
 	add_child(final)
 	var cover := TextureRect.new()

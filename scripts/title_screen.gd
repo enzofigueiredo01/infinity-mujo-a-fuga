@@ -25,6 +25,7 @@ func _ready() -> void:
 	quit_button.pressed.connect(func(): get_tree().quit())
 	close_controls.pressed.connect(_on_close_controls)
 
+	GameState.play_music("menu")
 	fade.color.a = 1.0
 	create_tween().tween_property(fade, "color:a", 0.0, 0.6)
 	play_button.grab_focus.call_deferred()

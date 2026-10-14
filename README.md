@@ -25,6 +25,7 @@ e superinteligente**. Se ele te tocar, você perde tudo.
 - O homem é imortal: espinhos, lasers, carros e trens só o empurram.
 - **Só o toque do caramujo acaba com ele.** A fase recomeça.
 - O caramujo rasteja por chão, paredes e tetos, salta no casco entre plataformas e cai do teto.
+- Ele fica mais rápido quanto mais você demora e, quando chega perto, brilha e dá uma **investida de muco**.
 
 ## Fases
 
@@ -38,8 +39,25 @@ e superinteligente**. Se ele te tocar, você perde tudo.
 
 Os mapas ficam em texto em `scripts/level_data.gd` (legenda no topo do arquivo).
 
+## Trilha sonora
+
+Uma faixa calma (inspirada em Celeste) para o menu e para cada fase, em loop, em `assets/music/`:
+
+| Faixa | Clima |
+|---|---|
+| Menu — Proposta | piano solo |
+| Fase 1 — Primeiros Passos | piano em arpejos, Lá menor |
+| Fase 2 — Meia-Noite | Rhodes lo-fi e sinos, Ré menor |
+| Fase 3 — Concreto | pulso contido, Mi menor |
+| Fase 4 — Neon | synthwave tranquilo, Fá lídio |
+| Fase 5 — Gravidade Zero | ambiente flutuante, Mi♭ maior |
+
+As faixas são geradas pelo script `tools/compor_trilha.py` (Python + numpy):
+`python3 tools/compor_trilha.py saida_wav` e depois converta para `.ogg`.
+
 ## Estrutura
 
 - `scenes/` — logo de introdução, tela inicial e cena do jogo
 - `scripts/` — jogador, caramujo (`snail.gd` + navegação `snail_nav.gd`), mapa, obstáculos, HUD
-- `assets/` — artes, fonte, vídeo de fundo e efeitos sonoros
+- `assets/` — artes, fonte, vídeo de fundo, trilha sonora e efeitos sonoros
+- `tools/` — script que compõe a trilha sonora

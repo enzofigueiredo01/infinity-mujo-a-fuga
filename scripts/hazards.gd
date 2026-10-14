@@ -9,7 +9,7 @@ class CarLane:
 	extends Node2D
 	## Faixa de carros da avenida: andam da direita para a esquerda.
 	const SPEED := 150.0
-	const INTERVAL := 3.0
+	const INTERVAL := 2.3
 	const CAR := Vector2(30, 14)
 	var x_min := 0.0
 	var x_max := 0.0
@@ -68,7 +68,7 @@ class CarLane:
 class Train:
 	extends Node2D
 	## Trem do metrô: luzes piscam e a buzina toca antes dele passar.
-	const IDLE := 4.0
+	const IDLE := 2.8
 	const WARN := 1.6
 	const SPEED := 650.0
 	const LENGTH := 640.0

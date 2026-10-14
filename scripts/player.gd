@@ -18,7 +18,7 @@ const JUMP_CUT := 0.45
 const DASH_SPEED := 300.0
 const DASH_TIME := 0.15
 const GLIDE_FALL := 50.0
-const FAN_LIFT := -130.0
+const FAN_LIFT := -260.0
 const BOUNCE_VELOCITY := -560.0
 const COYOTE_TIME := 0.1
 const JUMP_BUFFER := 0.12
@@ -197,13 +197,14 @@ func _physics_process(delta: float) -> void:
 		_jump_cut_done = true
 
 	# planar (guarda-chuva): segurar pulo caindo
-	gliding = has("glide") and not on_floor and velocity.y > -20.0 and Input.is_action_pressed("jump") and _jump_buffer <= 0.0
+	gliding = has("glide") and not on_floor and (velocity.y > -20.0 or in_wind) and Input.is_action_pressed("jump") and _jump_buffer <= 0.0
 	var g := (FALL_GRAVITY if velocity.y > 0.0 else GRAVITY) * gravity_scale
 	if in_wind:
+		# coluna de ar: planando sobe rápido; sem planar, sobe devagar
 		if gliding:
-			velocity.y = move_toward(velocity.y, FAN_LIFT, 700.0 * delta)
+			velocity.y = move_toward(velocity.y, FAN_LIFT, 1800.0 * delta)
 		else:
-			velocity.y = min(velocity.y + g * 0.35 * delta, MAX_FALL)
+			velocity.y = move_toward(velocity.y, FAN_LIFT * 0.45, 1100.0 * delta)
 	elif gliding:
 		velocity.y = min(velocity.y + g * delta, GLIDE_FALL)
 	else:

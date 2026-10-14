@@ -12,6 +12,13 @@ var story_seen := false
 var _sfx := {}
 var _players: Array[AudioStreamPlayer] = []
 
+# trilha sonora: dois players para trocar de música com crossfade
+const MUSIC_VOLUME_DB := -9.0
+var _music: Array[AudioStreamPlayer] = []
+var _music_active := 0
+var _music_name := ""
+var _music_tween: Tween
+
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -26,6 +33,53 @@ func _ready() -> void:
 		player.volume_db = -6.0
 		add_child(player)
 		_players.append(player)
+	for i in 2:
+		var mp := AudioStreamPlayer.new()
+		mp.volume_db = -80.0
+		add_child(mp)
+		_music.append(mp)
+
+
+## Toca uma faixa da trilha (assets/music/<nome>.ogg) em loop, com crossfade.
+## Se a faixa já estiver tocando, ela continua de onde estava.
+func play_music(track: String, fade := 1.5) -> void:
+	if track == _music_name:
+		set_music_duck(0.0)
+		return
+	var path := "res://assets/music/%s.ogg" % track
+	if not ResourceLoader.exists(path):
+		return
+	_music_name = track
+	var stream: AudioStreamOggVorbis = load(path)
+	stream.loop = true
+	var old := _music[_music_active]
+	_music_active = 1 - _music_active
+	var new := _music[_music_active]
+	new.stream = stream
+	new.volume_db = -40.0
+	new.play()
+	if _music_tween:
+		_music_tween.kill()
+	_music_tween = create_tween().set_parallel(true)
+	_music_tween.tween_property(new, "volume_db", MUSIC_VOLUME_DB, fade).set_trans(Tween.TRANS_SINE)
+	_music_tween.tween_property(old, "volume_db", -80.0, fade).set_trans(Tween.TRANS_SINE)
+	_music_tween.chain().tween_callback(old.stop)
+
+
+## Abaixa a música (em dB) por um tempo, ex.: quando o caramujo te pega.
+func set_music_duck(amount_db: float, time := 0.4) -> void:
+	if _music_name == "":
+		return
+	var player := _music[_music_active]
+	if _music_tween and _music_tween.is_running():
+		return
+	create_tween().tween_property(player, "volume_db", MUSIC_VOLUME_DB - amount_db, time)
+
+
+func stop_music(fade := 1.0) -> void:
+	_music_name = ""
+	for mp in _music:
+		create_tween().tween_property(mp, "volume_db", -80.0, fade)
 
 
 func new_game() -> void:

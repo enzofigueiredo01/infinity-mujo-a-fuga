@@ -7,6 +7,9 @@ extends Node2D
 ## Para vencer, chegue à saída (helicóptero, porta, elevador, carro voador, cápsula).
 
 const VIEW := Vector2(1280, 720)
+## Uma faixa da trilha sonora para cada cenário (assets/music).
+const MUSIC := {"city": "fase1_cidade", "metro": "fase2_metro", "bunker": "fase3_bunker",
+	"neon": "fase4_neon", "space": "fase5_espaco"}
 
 var data: Dictionary
 var level: LevelMap
@@ -35,6 +38,7 @@ var _signs := {}
 
 func _ready() -> void:
 	data = LevelData.LEVELS[GameState.current_level]
+	GameState.play_music(MUSIC.get(data.theme, ""))
 	_build_level()
 	hud = Hud.new()
 	add_child(hud)
@@ -270,6 +274,7 @@ func _caught() -> void:
 	player.caught = true
 	snail.running = false
 	GameState.play_sfx("caught")
+	GameState.set_music_duck(14.0, 0.3)
 	fx.burst(player.global_position, [Color("e5cd32"), Color("fedd86"), Color("bff5e8")], 26, 130.0)
 	_shake = 6.0
 	var tw := create_tween()

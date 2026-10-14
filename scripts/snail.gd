@@ -8,6 +8,13 @@ extends Node2D
 const REPLAN_TIME := 0.35
 const DROP_GRAVITY := 900.0
 const FAR_DISTANCE := 14.0 * 16.0  # longe demais: acelera com o muco
+const RAMP_PER_SECOND := 0.5       # fica um pouco mais rápido a cada segundo da fase
+const RAMP_MAX := 22.0
+const LUNGE_RANGE := 5.0 * 16.0    # investida de muco quando está perto
+const LUNGE_WARN := 0.45
+const LUNGE_TIME := 0.7
+const LUNGE_MULT := 2.6
+const LUNGE_COOLDOWN := 3.5
 
 var nav: SnailNav
 var target: Player
@@ -26,6 +33,10 @@ var _leap_time := 0.5
 var _fall_v := 0.0
 var _replan := 0.0
 var _timer := 0.0
+var _chase_t := 0.0
+var _lunge_warn := 0.0
+var _lunge := 0.0
+var _lunge_cd := 2.0
 var _alert := 0.0
 var _anim_t := 0.0
 var _rot := 0.0
@@ -70,9 +81,26 @@ func _process(delta: float) -> void:
 			GameState.play_sfx("alert", 0.8)
 		return
 
-	var spd := speed
-	if position.distance_to(target.global_position) > FAR_DISTANCE:
+	_chase_t += delta
+	var dist := position.distance_to(target.global_position)
+	var spd := speed + minf(_chase_t * RAMP_PER_SECOND, RAMP_MAX)
+	if dist > FAR_DISTANCE:
 		spd *= 1.5
+	# investida de muco: avisa (brilho) e dá um bote curto quando está perto
+	_lunge_cd = max(0.0, _lunge_cd - delta)
+	if _lunge_warn > 0.0:
+		_lunge_warn -= delta
+		if _lunge_warn <= 0.0:
+			_lunge = LUNGE_TIME
+			GameState.play_sfx("dash", 0.7)
+		spd *= 0.3  # se encolhe antes do bote
+	elif _lunge > 0.0:
+		_lunge -= delta
+		spd *= LUNGE_MULT
+	elif _lunge_cd <= 0.0 and dist < LUNGE_RANGE:
+		_lunge_warn = LUNGE_WARN
+		_lunge_cd = LUNGE_COOLDOWN
+		GameState.play_sfx("shell", 0.6)
 
 	if _edge_to == -1:
 		_replan -= delta
@@ -151,6 +179,10 @@ func _draw() -> void:
 		draw_set_transform(Vector2.ZERO, _rot, Vector2(_flip, 1))
 		_draw_snail()
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	if _lunge_warn > 0.0 or _lunge > 0.0:
+		# brilho de muco avisando o bote
+		var a := 0.5 + 0.5 * sin(_anim_t * 40.0) if _lunge_warn > 0.0 else 0.35
+		draw_circle(Vector2.ZERO, 11.0, Color(0.75, 0.96, 0.91, a * 0.5))
 	if not active:
 		# dormindo antes de começar a perseguição
 		var z := Color(1, 1, 1, 0.8)
